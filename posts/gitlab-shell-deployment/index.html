@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Deployment via gitlab shell executor &middot; moritzwelberg.de</title>
+
+		
+  		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/css/fonts.css">
+		
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="moritzwelberg.de" />
+	</head>
+
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					<h2 class="nav-title">moritzwelberg.de</h2>
+				</a>
+				<ul>
+    
+    
+        <li>
+            <a href="/about">
+                
+                <span>About</span>
+                
+            </a>
+        </li>
+    
+</ul>
+			</div>
+		</nav>
+
+        
+
+<main>
+	<div class="post">
+		<div class="post-info">
+        <br>
+        <time datetime="2021-02-09 17:41:32 &#43;0100 CET">9. Februar 2021</time>
+</div>
+
+		<h1 class="post-title">Deployment via gitlab shell executor</h1>
+<div class="post-line"></div>
+
+		
+
+		
+
+<p>Für diese Website wollte Ich ein, derzeit angesagtes deployment via gitlab einrichten. Allerdings läuft mein gitlab in einem LXC und um dort docker einzurichten, müssen dem LXC mehr Rechte zugewiesen werden, als mir lieb ist. Daher habe Ich einen alternativen Weg für das Bauen und Ausliefern der Seite gesucht. Der folgende Beitrag fasst meine Erfahrungen im Verlaufe dieser Suche zusammen.</p>
+
+<h1 id="aufbau">Aufbau</h1>
+
+<p>Ich habe auf meinem Laptop mit hugo eine neue statische Seite angelegt und das gesamte Verzeichnis als git repository initialisiert.
+Dieses repository wird auf dem oben genannten gitlab server gehostet. Auf diesem Server ist auch der gitlab runner sowie ebenfalls hugo installiert. Nachdem lokal Änderungen vorgenommen wurden, soll also beim push des git repositories der gitlab runner mit hugo die statische Seite bauen und diese dann auf einen webserver ausliefern.</p>
+
+<h1 id="vorbereitung">Vorbereitung</h1>
+
+<h2 id="installieren-von-hugo">Installieren von hugo</h2>
+
+<p>Hugo muss auf dem gitlab server installiert werden. Für debian gibt es ein eigenes <a href="https://packages.debian.org/sid/hugo">Paket</a>.</p>
+
+<h2 id="authentifizierung-einrichten">Authentifizierung einrichten</h2>
+
+<p>Damit das deployment via SSH funktioniert, muss auf dem gitlab server (wo auch der runner läuft) mit</p>
+
+<pre><code>ssh-keygen
+</code></pre>
+
+<p>ein SSH Key generiert werden. Danach kann der Key mittels</p>
+
+<pre><code>ssh-copy-id gitlab-runner@webserver
+</code></pre>
+
+<p>auf den webserver kopiert werden, sodass der gegebene Nutzer sich von der gitlab instanz aus beim webserver anmelden kann. Im Idealfall nicht unbedingt über den root account, sondern über einen eigens dafür angelegten &lsquo;gitlab-runner&rsquo; account.<br />
+Falls die Anmeldung via ssh-key nur über den root account funktioniert, muss ggf. die /etc/ssh/sshd_config angepasst werden. Hier einfach &lsquo;AuthorizedKeysFile&rsquo; auskommentieren, falls dieser Parameter aktiv ist.</p>
+
+<h1 id="installieren-des-gitlab-runner">Installieren des gitlab runner</h1>
+
+<p>Die Installation des gitlab runners ist sehr gut <a href="https://docs.gitlab.com/runner/install/linux-repository.html#installing-gitlab-runner">dokumentiert</a>.<br />
+Bei der <a href="https://docs.gitlab.com/runner/register/index.html#linux">Registrierung des runners</a> muss darauf geachtet werden, dass der executor nicht auf docker sondern auf shell gesetzt wird.</p>
+
+<h1 id="gitlab-ci-konfiguration">Gitlab-CI Konfiguration</h1>
+
+<p>Um den gerade eingerichteten runner zu verwenden, muss im repository die Datei .gitlab-ci.yml angelegt und befüllt werden. Die dort vorgegebene Konfiguration wird beim push in das remote repository im gitlab ausgeführt. In meinem Fall besteht die Konfiguration hier aus zwei Stufen (stages).<br />
+Zunächst wird nach dem push in der <em>build</em> Stufe hugo ausgeführt. Dies geschieht im gleichen Verzeichnis, in dem die .gitlab-ci.yml abgelegt wurde. Daher kann das hugo tool an der Stelle ohne weitere Parameter aufgerufen werden. Dabei wird im Verzeichnis <em>public/</em> das gesamte Webverzeichnis generiert, mit index.html, assets etc..<br />
+Danach wird in der <em>deploy</em> Stufe, das eben generierte Verzeichnis mittels <em>scp</em> auf den Webserver kopiert.</p>
+
+<pre><code>stages: 
+  - build
+  - deploy
+
+build:
+  stage: build
+  script: hugo
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
+
+deploy:
+  stage: deploy
+  script: scp -r public/* gitlab-runner@remote:/var/www/vhosts/moritzwelberg.de/public
+</code></pre>
+
+<p>Mit dieser Konfiguration könnte man nun schon fertig sein, wenn man ein selbstgebautes template/theme verwendet und/oder dieses kein git submodul des web repositories ist. Ich selbst verwende allerdings das <a href="https://github.com/EmielH/tale-hugo">Tale</a> theme, welches über github bezogen werden kann. Die gegebene Konfigurationsdatei lässt hugo in der &lsquo;build&rsquo; Stufe daher Fehler ausgeben.</p>
+
+<h1 id="fehler">Fehler</h1>
+
+<p>Der runner führt den Job zwar ohne Probleme aus, da hugo terminiert und die Fehler als &lsquo;WARN&rsquo; im stdout ausgegeben werden.</p>
+
+<pre><code>'WARN 2021/02/09 16:21:42 Found no layout for ...'
+</code></pre>
+
+<p>Allerdings sorgt das, in den Meldungen bemängelte Fehlen der Template Dateien dafür, dass das Erstellen der Seite fehlschlägt. Um diese Fehler und somit auch das Fehlschlagen des Seitenaufbaus zu unterbinden muss repo des verwendeten Themes als submodul zu dem eigenen repository hinzugefügt werden.<br />
+In &lsquo;.gitmodules&rsquo; muss in meinem Fall also folgendes hinterlegt werden:</p>
+
+<pre><code>[submodule &quot;tale-hugo&quot;]
+  path = themes/tale
+  url = https://github.com/EmielH/tale-hugo.git
+</code></pre>
+
+<p>Ein entsprechender Parameter muss auch in die .gitlab-ci.yml eingefügt werden:</p>
+
+<pre><code>stages: 
+  - build
+  - deploy
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+build:
+  stage: build
+  script:
+  - hugo
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
+
+deploy:
+  stage: deploy
+  script: scp -r public/* gitlab-runner@remote:/var/www/vhosts/moritzwelberg.de/public
+</code></pre>
+
+<h1 id="workflow">Workflow</h1>
+
+<p>Mit dieser Konfiguration kann Ich nun auch die beliebten continuous integration Möglichkeiten von gitlab zum Erstellen einer statischen Website mittels hugo nutzen, ohne dafür vom gitlab runner einen docker container anlegen lassen zu müssen.<br />
+Konkret heißt das, dass ich auf meinem Endgerät in einem lokalen repository die Seite bearbeiten und testen kann und diese dann nach dem push des repositories automatisch auf dem gitlab server zur endgültigen Website zusammengebaut und von dort an den Webserver zur Darstellung weitergereicht wird.<br />
+Unter Umständen ist es besser anstelle des <em>scp</em> Befehls das tool <em>rsync</em> für das Kopieren auf den Webserver zu verwenden. SCP überschreibt lediglich die vorhandenen Dateien und kopiert neue hinzu. Mit rsync wäre es auch möglich lokal gelöschte Dateien auch auf dem Webserver zu entfernen.</p>
+
+
+		
+	</div>
+
+	<div class="pagination">
+		<a href="/posts/deeplabv3&#43;/" class="left arrow">&#8592;</a>
+		<a href="/posts/proxmox-2-plus-1-cluster/" class="right arrow">&#8594;</a>
+
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
+
+
+        		<footer>
+			
+			<span>
+			&copy; <time datetime="2021-02-17 14:12:03.726138548 &#43;0100 CET m=&#43;0.081904455">2021</time> . Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			</span>
+		</footer>
+
+    </body>
+</html>

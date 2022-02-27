@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Fintech KI &middot; moritzwelberg.de</title>
+
+		
+  		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/css/fonts.css">
+		
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="moritzwelberg.de" />
+	</head>
+
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					<h2 class="nav-title">moritzwelberg.de</h2>
+				</a>
+				<ul>
+    
+    
+        <li>
+            <a href="/about">
+                
+                <span>About</span>
+                
+            </a>
+        </li>
+    
+</ul>
+			</div>
+		</nav>
+
+        
+
+<main>
+	<div class="post">
+		<div class="post-info">
+        <br>
+        <time datetime="2020-08-18 15:46:30 &#43;0200 CEST">18. August 2020</time>
+</div>
+
+		<h1 class="post-title">Fintech KI</h1>
+<div class="post-line"></div>
+
+		
+
+		
+
+<p>Künstliche Intelligenz ermöglicht es, unter Berücksichtigung massiver Datengrundlagen gezielte Entscheidungen zu treffen und sogar zuverlässige Vorhersagen abzugeben. Zu wissen inwiefern sich Trends und Muster in einem kontinuierlichen Datenaufkommen fortsetzen, kann an den globalen Finanzmärkten ein entscheidender Wettbewerbsvorteil sein.</p>
+
+<h1 id="sentiment-analysis">Sentiment Analysis</h1>
+
+<p>Ein etablierter Indikator, um zukünftige Bewegungen an Finanzmärkten und somit profitable Anlagestrategien abzuschätzen ist das sogenannte &ldquo;Market Sentiment&rdquo;. Hierbei handelt es sich um die generelle Wahrnehmung der Investoren im Bezug auf einen Finanzmarkt, oder einzelne Unternehmen[1]. Ist etwa ein Unternehmen durch negative Pressemeldungen aufgefallen, wie kürzlich z.B. das DAX-Unternehmen Wirecard, so fällt der Wert des Unternehmens in der öffentlichen Wahrnehmung und eben auch in der Wahrnehmung der Investoren[2]. Bei so einer ausgeprägten Rufschädigung wollen viele Investoren ihre Anteile an dem Unternehmen verkaufen. Das Angebot an Aktien für das Unternehmen steigt drastisch an. Die Nachfrage fällt drastisch ab. Das Resultat ist ein sinkender Aktienkurs:</p>
+
+<figure>
+    <img src="/wirecard_kurs_bloomberg.png" width="100%"/> <figcaption>
+            <h4>Sinkender Aktienkurs der Wirecard Aktie</h4>
+        </figcaption>
+</figure>
+
+
+<p>Eine solch starke Änderung ist natürlich nicht der Regelfall. Gewöhnlich sind die Schwankungen deutlich subtiler. Es lässt sich jedoch festhalten, dass es eine signifikante Rolle spielt, wie ein Unternehmen von seinen Investoren wahrgenommen wird.</p>
+
+<p>Unter der Prämisse, dass private Investoren eine repräsentative Teilmenge der gesamten Gesellschaft sind, scheint es im Umkehrschluss sinnvoll die Wahrnehmung der gesamten Gesellschaft als Indikator für das Verhalten der Finanzmärkte zu betrachten. Da zentralisierte Umfragen teuer und zeitaufwändig sind, liegt es nahe bereits vorhandenes Material zu sammeln und automatisch auszuwerten. Eine automatisierte Betrachtung von Textmaterial hinsichtlich der Haltung des Verfassers gegenüber der im Text erwähnten Gegenstände wird &ldquo;Sentiment Analysis&rdquo; genannt[3].</p>
+
+<h3 id="twitter-als-datengrundlage">Twitter als Datengrundlage</h3>
+
+<p>Ein großer, öffentlich zugänglicher Datensatz von Meinungen und subjektiver Wahrnehmung der (amerikanischen) Gesellschaft ist Twitter.
+Der Kurznachrichtendienst wird vorrangig von jungen Erwachsenen (18-29 Jahre) genutzt[4], welche allerdings einen eher geringen Beitrag zur (amerikanischen) Kaufkraft leisten[5].
+Ein entscheidender Vorteil gegenüber anderen Plattformen, welche eine diversere Demografie als Twitter vorweisen, liegt allerdings darin, dass die meisten der Einträge auf Twitter öffentlich zugänglich sind.</p>
+
+<h3 id="webscraping">Webscraping</h3>
+
+<p>Das Abschöpfen öffentlich zugänglicher Daten von Webseiten oder Webdiensten nennt sich &lsquo;Webscraping&rsquo;. Mit Werkzeugen wie der <a href="https://developer.twitter.com/en/docs/twitter-api">Twitter API</a> und <a href="https://pypi.org/project/beautifulsoup4/">beautifulsoup4</a>, lässt sich Twitter mit verhältnismäßig geringem Aufwand nach relevanten Tweets durchsuchen und strukturiert abspeichern.</p>
+
+<p>Wissenschaftler der Indiana University Bloomington haben bereits im Jahr 2010 Ansätze präsentiert, wie mittels Webscraping und dem Einsatz von natural language processing eine zutreffende Vorhersage über Kursschwankungen im Aktienhandel 3-4 Tage im voraus getroffen werden kann[6]. Ein interessantes Ergebnis dieser Forschung ist, dass als bester Indikator für steigende Kurse nicht etwa der generelle Optimismus (&lsquo;positive sentiment&rsquo;) der Gesellschaft in Form von positiven Äußerungen, sondern die generelle Gelassenheit (&lsquo;calmness&rsquo;) ausschlaggebend zu sein scheint.</p>
+
+<h1 id="technische-analyse">Technische Analyse</h1>
+
+<p>Neben der Sentiment Analysis gibt es das etablierte Konzept der technischen Analyse. Diese setzt sich mit historischen Marktdaten, wie z.B. dem Preis und Kaufvolumen der Produkte auseinander[7].</p>
+
+<h3 id="robo-advisor">Robo-Advisor</h3>
+
+<p>Auch in der technischen Analyse werden KI Ansätze immer populärer. Bereits um die Jahrtausendwende gab es vielversprechende Forschungsvorhaben und -ergebnisse[8]. Mittlerweile gibt es einige kommerzielle Dienstleister, die sich derlei Technologie zunutze machen. Oftmals wird dabei ein Abonnement abgeschlossen, bei dem der Investor monatlich für die Einsicht in aktuelle Vorhersagen zahlt. Dieses Konzept der automatisierten Anlageberatung wird &lsquo;Robo-Advisor&rsquo; genannt.</p>
+
+<h1 id="regulation">Regulation</h1>
+
+<p>Viele solcher Robo-Advisor-Unternehmen versuchen sich bereits präventiv aus der Verantwortung eines herkömmlichen Anlageberaters zu ziehen. Sie berufen sich dabei meist auf die Tatsache, dass ihre Dienstleistung keine herkömmliche Anlageberatung, sondern lediglich eine Vermittlung bzw. eine Empfehlung sei. Damit fallen sie in vielen Ländern unter eine andere Rechtsprechung als ein menschlicher Berater, der bei schlechter oder böswilliger Beratung unter Umständen Schadensersatz leisten muss.
+Die rechtliche Einordnung solcher Robo-Advisor ist in Deutschland bislang nicht eindeutig geklärt und wird im Zweifel individuell vorgenommen[9]. Zudem besitzt eine intransparente, zentralisierte und umfangreiche Vorhersageplattform großes Potential zur Marktmanipulation.</p>
+
+<p>Der Einsatz von maschinellem Lernen in der Finanzbranche dürfte sich dennoch in Zukunft weiter verstärken. Die üblichen Argumente gegen den Einsatz von KI, wie z.B. der intransparenten Entscheidungsfindung mögen in der Automobilbranche oder dem Gesundheitswesen relevant sein, bei risikofreudigen Börsenspekulanten aber kaum auf Gehör stoßen.</p>
+
+<p>[1]<a href="https://www.investopedia.com/terms/m/marketsentiment.asp">Market Sentiment</a></p>
+
+<p>[2]<a href="https://www.tagesschau.de/faktenfinder/inland/wirecard-129.html">Bilanzskandal des DAX-Konzerns: Wie wirecard tricksen konnte</a></p>
+
+<p>[3]<a href="https://arxiv.org/abs/cs/0212032">Peter D. Turney (2002) Thumbs Up or Thumbs Down? Semantic Orientation Applied to Unsupervised Classification of Reviews</a></p>
+
+<p>[4]<a href="https://www.pewresearch.org/fact-tank/2019/04/10/share-of-u-s-adults-using-social-media-including-facebook-is-mostly-unchanged-since-2018/">Share of U.S. adults using social media, including Facebook, is mostly unchanged since 2018</a></p>
+
+<p>[5]<a href="https://www.bls.gov/cex/2018/aggregate/age.pdf">Consumer Expenditure Survey, U.S. Bureau of Labor Statistics, 2018</a></p>
+
+<p>[6]<a href="https://arxiv.org/pdf/1010.3003.pdf">Bollen, Mao, Zeng (2010) Twitter mood predicts the stock market.</a></p>
+
+<p>[7]<a href="https://www.investopedia.com/terms/t/technical-analysis-of-stocks-and-trends.asp">Guide to Technical Analysis</a></p>
+
+<p>[8]<a href="https://pdfs.semanticscholar.org/94c7/48440f779e8aa12a5c1817b0ab72f015689e.pdf">On Developing a Financial Prediction System:Pitfalls and Possibilities</a></p>
+
+<p>[9]<a href="https://private-banker.online/news/die-app-kolumne.html">Regulation von Fintechs</a></p>
+
+
+		
+	</div>
+
+	<div class="pagination">
+		<a href="/posts/deeplabv3&#43;/" class="right arrow">&#8594;</a>
+
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
+
+
+        		<footer>
+			
+			<span>
+			&copy; <time datetime="2021-02-17 14:12:03.729521855 &#43;0100 CET m=&#43;0.085287742">2021</time> . Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			</span>
+		</footer>
+
+    </body>
+</html>
