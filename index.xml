@@ -18,7 +18,11 @@
       <pubDate>Wed, 17 Feb 2021 14:09:08 +0100</pubDate>
       
       <guid>https://moritzwelberg.de/posts/proxmox-2-plus-1-cluster/</guid>
-      <description>Auf meinem Heimserver läuft die https://www.proxmox.com/en/</description>
+      <description>Einleitung Auf meinem Heimserver (HP1) läuft die Virtualisierungsumgebung Proxmox.
+Um der Umgebung mehr Speicherplatz und Rechenkapazität hinzuzufügen, bietet Proxmox die Möglichkeit ein &amp;ldquo;Cluster&amp;rdquo; aus mehreren Rechnern zu bilden.
+Dieses Cluster kann dann über die Weboberfläche zentral verwaltet werden, was den Umgang mit mehreren Knoten deutlich vereinfacht.
+Das Einbinden eines zweiten Knotens (HP2) über die Kommandozeile gestaltet sich sehr einfach.
+HP1# pvecm create &amp;lt;CLUSTERNAME&amp;gt;  Wobei HP1 der erste Knoten des Clusters ist.</description>
     </item>
     
     <item>
@@ -29,16 +33,6 @@
       <guid>https://moritzwelberg.de/posts/gitlab-shell-deployment/</guid>
       <description>Für diese Website wollte Ich ein, derzeit angesagtes deployment via gitlab einrichten. Allerdings läuft mein gitlab in einem LXC und um dort docker einzurichten, müssen dem LXC mehr Rechte zugewiesen werden, als mir lieb ist. Daher habe Ich einen alternativen Weg für das Bauen und Ausliefern der Seite gesucht. Der folgende Beitrag fasst meine Erfahrungen im Verlaufe dieser Suche zusammen.
 Aufbau Ich habe auf meinem Laptop mit hugo eine neue statische Seite angelegt und das gesamte Verzeichnis als git repository initialisiert.</description>
-    </item>
-    
-    <item>
-      <title>Deeplabv3&#43;</title>
-      <link>https://moritzwelberg.de/posts/deeplabv3&#43;/</link>
-      <pubDate>Wed, 14 Oct 2020 21:12:10 +0200</pubDate>
-      
-      <guid>https://moritzwelberg.de/posts/deeplabv3&#43;/</guid>
-      <description>Einleitung Die Segmentierung von Bildern in unterschiedliche Bildbereiche, aufgrund der Bedeutung der Bildinhalte ist ein Problem, welches derzeit in vielen Anwendungsbereichen, wie z.B. der Medizinischen Bildgebung oder der Automobilindustrie erforscht wird[1, 2].
-Das Problem der semantischen Bildsegmentierung lässt sich in zwei untergeordnete Aufgaben unterteilen. Zum Einen die Aufgabe der Objekterkennung, welche eine generelle Trennung von unterschiedlichen Bildsegmenten bezüglich derer Bedeutung ermöglicht. Zum Anderen die Optimierung der Grenzschärfe. Hierbei geht es darum möglichst genaue Grenzen zwischen einzelnen, semantisch unabhängigen Bildsegmenten zu finden.</description>
     </item>
     
     <item>
